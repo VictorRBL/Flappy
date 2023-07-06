@@ -109,7 +109,7 @@ function Progresso() {
   this.atualizarPontos(0);
 }
 
-function testColision(elementoA, elementoB) {
+function testSobrepor(elementoA, elementoB) {
   const a = elementoA.getBoundingClientRect();
   const b = elementoB.getBoundingClientRect();
 
@@ -117,6 +117,20 @@ function testColision(elementoA, elementoB) {
   const vertical = a.top + a.height >= b.top && b.top + b.height >= a.top;
 
   return horizontal && vertical;
+}
+
+function testColidir(passaro, barreiras) {
+  let colisao = false;
+  barreiras.conjunto.forEach((par) => {
+    if (!colisao) {
+      const superior = par.superior.barreira;
+      const inferior = par.inferior.barreira;
+      colisao =
+        testSobrepor(passaro.elemento, superior) ||
+        testSobrepor(passaro.elemento, inferior);
+    }
+  });
+  return colisao;
 }
 
 function game() {
@@ -138,6 +152,9 @@ function game() {
     const temporizador = setInterval(() => {
       barreiras.animar();
       passaro.animar();
+      if (testColidir(passaro, barreiras)) {
+        clearInterval(temporizador);
+      }
     }, 30);
   };
 }
