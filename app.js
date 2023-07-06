@@ -65,9 +65,9 @@ function ConjuntoDeBarreiras(
       }
       const meio = largura / 2;
 
-      // if (par.getX() + deslocamento >= meio && par.getX() < meio) {
-      //   notificarPonto();
-      // }
+      if (par.getX() + deslocamento >= meio && par.getX() < meio) {
+        notificarPonto();
+      }
     });
   };
 }
@@ -91,22 +91,55 @@ function Passaro(alturaDoJogo) {
   this.animar = () => {
     const novoY = this.getY() + (voando ? 8 : -5);
     const alturaMaxima = alturaDoJogo - this.elemento.clientHeight;
-
-    this.setY(novoY);
+    if (novoY >= alturaMaxima) {
+      this.setY(alturaMaxima);
+    } else if (novoY <= 0) {
+      this.setY(0);
+    } else this.setY(novoY);
   };
 
   this.setY(alturaDoJogo / 2);
 }
 
-const barreiras = new ConjuntoDeBarreiras(600, 1000, 200, 400);
-const passaro = new Passaro(600);
+function Progresso() {
+  this.elemento = criarElemento("span", "progresso");
+  this.atualizarPontos = (pontos) => {
+    this.elemento.innerHTML = pontos;
+  };
+  this.atualizarPontos(0);
+}
 
-const cenarioDOM = document.querySelector(".cenario");
+function testColision(elementoA, elementoB) {
+  const a = elementoA.getBoundingClientRect();
+  const b = elementoB.getBoundingClientRect();
 
-barreiras.conjunto.forEach((par) => cenarioDOM.appendChild(par.par));
-cenarioDOM.appendChild(passaro.elemento);
+  const horizontal = a.left + a.width >= b.left && b.left + b.width >= a.left;
+  const vertical = a.top + a.height >= b.top && b.top + b.height >= a.top;
 
-setInterval(() => {
-  barreiras.animar();
-  passaro.animar();
-}, 30);
+  return horizontal && vertical;
+}
+
+function game() {
+  let pontos = 0;
+
+  const passaro = new Passaro(600);
+  const progresso = new Progresso();
+  const barreiras = new ConjuntoDeBarreiras(600, 1000, 300, 400, () =>
+    progresso.atualizarPontos(++pontos)
+  );
+
+  const cenarioDOM = document.querySelector(".cenario");
+
+  barreiras.conjunto.forEach((par) => cenarioDOM.appendChild(par.par));
+  cenarioDOM.appendChild(passaro.elemento);
+  cenarioDOM.appendChild(progresso.elemento);
+
+  this.start = () => {
+    const temporizador = setInterval(() => {
+      barreiras.animar();
+      passaro.animar();
+    }, 30);
+  };
+}
+
+new game().start();
