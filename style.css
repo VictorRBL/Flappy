@@ -1,0 +1,56 @@
+html {
+  text-align: center;
+  background-color: darkblue;
+  color: white;
+}
+
+.cenario {
+  background-color: deepskyblue;
+  box-sizing: border-box;
+  position: relative;
+  width: 1000px;
+  height: 600px;
+  margin: 20px auto;
+  border: 5px solid dodgerblue;
+}
+
+.passaro {
+  position: absolute;
+  left: calc(50% - 30px);
+  width: 60px;
+}
+
+.par-de-barreiras {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.barreira {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.corpo {
+  width: 110px;
+  background: linear-gradient(90deg, darkgreen, lightgreen);
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+}
+
+.borda {
+  height: 30px;
+  width: 130px;
+  background: linear-gradient(90deg, darkgreen, lightgreen);
+  border: 2px solid black;
+}
+
+.progresso {
+  font-size: 70px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
